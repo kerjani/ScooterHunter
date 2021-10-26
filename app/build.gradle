@@ -20,7 +20,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        }
+    }
 
     buildTypes {
         release {
@@ -42,6 +42,15 @@ android {
     kapt {
         correctErrorTypes = true
     }
+    sourceSets {
+        String sharedTestDir = 'src/sharedTest/java'
+        test {
+            java.srcDirs += sharedTestDir
+        }
+        androidTest {
+            java.srcDirs += sharedTestDir
+        }
+    }
 }
 
 dependencies {
@@ -51,13 +60,13 @@ dependencies {
     implementation "com.google.android.material:material:1.4.0"
     implementation "androidx.constraintlayout:constraintlayout:2.1.0"
 
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2"
 
     implementation "com.google.android.gms:play-services-maps:17.0.0"
     implementation 'com.google.maps.android:android-maps-utils:2.3.0'
 
-    implementation "com.google.dagger:hilt-android:2.38.1"
+    implementation "com.google.dagger:hilt-android:$hilt_version"
     implementation "androidx.room:room-common:2.3.0"
     kapt "androidx.room:room-compiler:2.3.0"
 
@@ -68,7 +77,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
     implementation 'androidx.room:room-ktx:2.3.0'
 
-    kapt "com.google.dagger:hilt-android-compiler:2.38.1"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 
     implementation "io.ktor:ktor-client-android:1.6.3"
     implementation "io.ktor:ktor-client-serialization:1.6.3"
@@ -79,9 +88,26 @@ dependencies {
     implementation "com.google.firebase:firebase-analytics-ktx"
     implementation "com.google.firebase:firebase-crashlytics-ktx"
 
-    testImplementation "junit:junit:4.+"
-    androidTestImplementation "androidx.test.ext:junit:1.1.3"
-    androidTestImplementation "androidx.test.espresso:espresso-core:3.4.0"
-    implementation "androidx.core:core-ktx:+"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+// AndroidX Test - JVM testing
+    testImplementation "junit:junit:4.13.2"
+    androidTestImplementation "androidx.test.ext:junit-ktx:1.1.3"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
+
+    testImplementation "androidx.test:core-ktx:$androidXTestCoreVersion"
+    testImplementation "androidx.arch.core:core-testing:$archTestingVersion"
+    testImplementation "org.robolectric:robolectric:$robolectricVersion"
+    testImplementation "org.hamcrest:hamcrest-all:$hamcrestVersion"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutineVersion"
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+
+    // AndroidX Test - Instrumented testing
+    androidTestImplementation "org.mockito:mockito-core:$mockitoVersion"
+    androidTestImplementation "androidx.arch.core:core-testing:$archTestingVersion"
+    androidTestImplementation "androidx.test:core-ktx:$androidXTestCoreVersion"
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutineVersion"
+    testImplementation("org.mockito:mockito-inline:2.8.47")
+    //Until the bug at https://issuetracker.google.com/128612536 is fixed
+    debugImplementation("androidx.fragment:fragment-testing:$fragment_version") {
+        exclude group: "androidx.test", module: "core"
+    }
 }
