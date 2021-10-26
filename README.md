@@ -27,6 +27,8 @@ The app displays electric scooter vehicles on the map.
 * [Android KTX](https://developer.android.com/kotlin/ktx) provides concise, idiomatic Kotlin to Jetpack, Android platform, and other APIs.
 * [Firebase Analytics](https://firebase.google.com/products/analytics) Analytics of the screens usage across the users.
 * [Firebase Crashlytics](https://firebase.google.com/products/crashlytics) Crash reports.
+* [Firebase App Distribution](https://firebase.google.com/docs/app-distribution) The built apps are distributed for internal testing. See The invite link above.
+* [GitHub Actions](https://github.com/features/actionss) The aps are built here.
 
 ## Build instructions
 
