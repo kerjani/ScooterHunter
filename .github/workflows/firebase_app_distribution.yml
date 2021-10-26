@@ -1,0 +1,33 @@
+name: Build & upload to Firebase App Distribution 
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: set up Java 11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+    - name: API keys to local.properties
+      env:
+        MAPS_API_KEY : ${{secrets.MAPS_API_KEY}}
+        SECRET_KEY : ${{secrets.SECRET_KEY}}
+      run: |
+        echo '' >> ./local.properties
+        echo MAPS_API_KEY="$MAPS_API_KEY" >> ./local.properties
+        echo SECRET_KEY="$SECRET_KEY" >> ./local.properties
+    - name: build debug
+      run: ./gradlew assembleDebug --stacktrace
+    - name: upload artifact to Firebase App Distribution
+      uses: wzieba/Firebase-Distribution-Github-Action@v1
+      with:
+        appId: ${{secrets.FIREBASE_APP_ID}}
+        token: ${{secrets.FIREBASE_TOKEN}}
+        groups: internal-testers, external-testers
+        file: app/build/outputs/apk/debug/app-debug.apk

@@ -1,0 +1,52 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.ScooterHunter" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/accent</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+
+<!--        <item name="bottomSheetDialogTheme">@style/Theme.ScooterHunter.BottomSheetDialogTheme</item>-->
+
+<!--        <item name="bottomSheetStyle">@style/Theme.ScooterHunter.BottomSheetStyle</item>-->
+    </style>
+
+<!--    <style name="Theme.ScooterHunter.BottomSheetDialogTheme" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">-->
+<!--        <item name="android:background">@android:color/transparent</item>-->
+<!--        <item name="android:windowBackground">@android:color/transparent</item>-->
+<!--        <item name="bottomSheetStyle">@style/Theme.ScooterHunter.BottomSheetStyle</item>-->
+
+
+<!--        <item name="android:windowContentOverlay">@null</item>-->
+<!--        <item name="android:colorBackground">@android:color/transparent</item>-->
+
+<!--    </style>-->
+<!--    <style name="Theme.ScooterHunter.BottomSheetStyle" parent="Widget.MaterialComponents.BottomSheet.Modal">-->
+<!--        <item name="android:background">@android:color/transparent</item>-->
+<!--        <item name="android:windowBackground">@null</item>-->
+<!--        <item name="android:colorBackground">@android:color/transparent</item>-->
+
+<!--    </style>-->
+
+    <style name="Theme.ScooterHunter.DetailNameText">
+        <item name="android:textSize">24sp</item>
+        <item name="android:text">bold</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_marginTop">@dimen/margin_small</item>
+        <item name="android:layout_marginStart">@dimen/margin_small</item>
+    </style>
+
+    <style name="Theme.ScooterHunter.DetailValueText">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_marginTop">@dimen/margin_tiny</item>
+        <item name="android:layout_marginStart">@dimen/margin_small</item>
+        <item name="android:drawablePadding">@dimen/margin_tiny</item>
+    </style>
+</resources>

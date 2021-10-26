@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="scooter"
+            type="com.kernacs.scooterhunter.data.entity.ScooterEntity" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?colorSecondary"
+        android:paddingHorizontal="@dimen/bottom_sheet_margin"
+        android:paddingBottom="@dimen/bottom_sheet_margin"
+        tools:context=".ui.details.ScooterDetailsFragment">
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progressIndicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:paddingBottom="@dimen/bottom_sheet_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_electric_scooter"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/name" />
+
+        <TextView
+            android:id="@+id/name"
+            style="@style/Theme.ScooterHunter.DetailNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:text="@{@string/detail_title(scooter.model, scooter.fleetBirdId)}"
+            app:layout_constraintStart_toEndOf="@id/image"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="TIER #1233213" />
+
+
+        <TextView
+            android:id="@+id/battery_value"
+            style="@style/Theme.ScooterHunter.DetailValueText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_battery"
+            android:text="@{@string/detail_battery(scooter.battery)}"
+            app:layout_constraintStart_toEndOf="@id/image"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            tools:text="70 %" />
+
+        <TextView
+            android:id="@+id/zone_value"
+            style="@style/Theme.ScooterHunter.DetailValueText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_zone"
+            android:text="@{@string/detail_zone(scooter.zoneId)}"
+            app:layout_constraintStart_toEndOf="@id/image"
+            app:layout_constraintTop_toBottomOf="@id/battery_value"
+            tools:text="Zone: Berlin" />
+
+        <TextView
+            android:id="@+id/model_value"
+            style="@style/Theme.ScooterHunter.DetailValueText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{@string/detail_status(scooter.state.value)}"
+            app:layout_constraintStart_toEndOf="@id/image"
+            app:layout_constraintTop_toBottomOf="@id/zone_value"
+            tools:text="Status: ACTIVE" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "769002766410",
+    "project_id": "scooter-hunter-app",
+    "storage_bucket": "scooter-hunter-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:769002766410:android:62a1997566581fc11ca6b3",
+        "android_client_info": {
+          "package_name": "com.kernacs.scooterhunter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "769002766410-1pg2a363413mvq8msictii7o7imh87a2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkiciLjnV_6-hwWS-0CVuu6sklCmiS-70"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "769002766410-1pg2a363413mvq8msictii7o7imh87a2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
