@@ -189,12 +189,11 @@ class ScootersMapFragment : BaseFragment(), OnMapReadyCallback {
     @SuppressLint("PotentialBehaviorOverride")
     private fun setUpClusterer(items: List<ScooterEntity>) {
         clusterManager.setOnClusterClickListener {
-            map.animateCamera(
-                CameraUpdateFactory.newLatLngZoom(
-                    it.position,
-                    floor((map.cameraPosition.zoom + 1).toDouble()).toFloat()
-                ), 300, null
-            )
+            val builder = LatLngBounds.builder()
+            for (item in it.items) {
+                builder.include(item.position)
+            }
+            map.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100))
             true
         }
         clusterManager.setOnClusterItemClickListener {
