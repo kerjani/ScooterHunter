@@ -16,7 +16,7 @@ android {
         applicationId "com.kernacs.scooterhunter"
         minSdk 26
         targetSdk 31
-        versionCode 1
+        versionCode rootProject.gitCommitCount
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
