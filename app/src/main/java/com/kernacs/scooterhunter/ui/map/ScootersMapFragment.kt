@@ -13,8 +13,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.material.snackbar.Snackbar
@@ -26,11 +27,14 @@ import com.kernacs.scooterhunter.databinding.FragmentScootersMapBinding
 import com.kernacs.scooterhunter.ui.details.ScooterDetailsFragment
 import com.kernacs.scooterhunter.util.EmptyDataException
 import dagger.hilt.android.AndroidEntryPoint
-import kotlin.math.floor
 
 
 @AndroidEntryPoint
 class ScootersMapFragment : BaseFragment(), OnMapReadyCallback {
+
+    private var savedCameraPosition: CameraPosition? = null
+
+    private var persistedMapBundle: Bundle? = null
 
     private var isMapReady: Boolean = false
 
@@ -72,11 +76,16 @@ class ScootersMapFragment : BaseFragment(), OnMapReadyCallback {
     ): View {
         binding = FragmentScootersMapBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
+        binding.progressIndicator.show()
+        persistedMapBundle = savedInstanceState?.getBundle(MAP_VIEW_STATE_KEY)
+        initMapViewState(binding.mapView)
+        binding.mapView.getMapAsync(this)
+        registerObservers()
+        viewModel.load()
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    private fun registerObservers() {
 
         viewModel.data.observe(this as LifecycleOwner, { data ->
             if (data.isEmpty())
@@ -102,14 +111,6 @@ class ScootersMapFragment : BaseFragment(), OnMapReadyCallback {
                 binding.progressIndicator.hide()
             }
         })
-    }
-
-    override fun onStart() {
-        super.onStart()
-        binding.progressIndicator.show()
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-        mapFragment?.getMapAsync(this)
-        viewModel.load()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -226,7 +227,69 @@ class ScootersMapFragment : BaseFragment(), OnMapReadyCallback {
             clusterManager.addItem(offsetItem)
         }
         clusterManager.cluster()
-        zoomToMarkers()
+
+        savedCameraPosition?.let {
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(it.target, it.zoom))
+        } ?: run {
+            zoomToMarkers()
+        }
     }
 
+    private fun initMapViewState(mapView: MapView) {
+        mapView.onCreate(persistedMapBundle)
+        isMapReady = persistedMapBundle != null
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        savedInstanceState?.apply {
+            persistedMapBundle = getBundle(MAP_VIEW_STATE_KEY) ?: Bundle()
+
+            savedCameraPosition = getParcelable(CAMERA_POSITION_STATE_KEY)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBundle(MAP_VIEW_STATE_KEY, persistedMapBundle)
+        outState.putParcelable(CAMERA_POSITION_STATE_KEY, map.cameraPosition)
+    }
+
+    // region Typical lifecycle method forwarding
+    override fun onStart() {
+        super.onStart()
+        binding.mapView.onStart()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.mapView.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.mapView.onPause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        binding.mapView.onStop()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        binding.mapView.onLowMemory()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.mapView.onSaveInstanceState(persistedMapBundle)
+        binding.mapView.onDestroy()
+        isMapReady = false
+    }
+
+    companion object {
+        private const val MAP_VIEW_STATE_KEY = "mapViewStateKey"
+        private const val CAMERA_POSITION_STATE_KEY = "cameraPositionStateKey"
+    }
 }

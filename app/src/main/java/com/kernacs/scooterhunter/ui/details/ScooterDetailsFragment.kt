@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LifecycleOwner
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import com.kernacs.scooterhunter.R
 import com.kernacs.scooterhunter.base.BaseBottomSheetDialogFragment
@@ -58,6 +59,12 @@ class ScooterDetailsFragment : BaseBottomSheetDialogFragment() {
                 binding.progressIndicator.hide()
             }
         })
+    }
+    override fun onStart() {
+        super.onStart()
+        //this forces the sheet to appear at max height even on landscape
+        val behavior = BottomSheetBehavior.from(requireView().parent as View)
+        behavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     private fun downloadData() {

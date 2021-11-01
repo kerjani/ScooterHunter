@@ -1,5 +1,6 @@
 package com.kernacs.scooterhunter.base
 
+import android.util.Log
 import androidx.annotation.CallSuper
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -24,6 +25,7 @@ abstract class BaseFragment : Fragment() {
 
     fun showError(error: Throwable, refreshAction: () -> Unit) {
         view?.let {
+            Log.e(TAG, error.stackTraceToString())
             Snackbar.make(it, error.toReadableRationale(resources), Snackbar.LENGTH_INDEFINITE)
                 .apply {
                     setAction(R.string.retry) {
@@ -32,5 +34,9 @@ abstract class BaseFragment : Fragment() {
                     show()
                 }
         }
+    }
+
+    companion object {
+        private var TAG = BaseFragment::class.java.simpleName
     }
 }
