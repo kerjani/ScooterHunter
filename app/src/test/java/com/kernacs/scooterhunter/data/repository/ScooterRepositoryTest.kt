@@ -7,6 +7,7 @@ import com.kernacs.scooterhunter.data.source.remote.ScootersRemoteDataSource
 import com.kernacs.scooterhunter.fakeEntity
 import com.kernacs.scooterhunter.fakeScooterDto
 import com.kernacs.scooterhunter.invalidDataException
+import com.kernacs.scooterhunter.util.EmptyDataException
 import com.kernacs.scooterhunter.util.Result
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
@@ -117,22 +118,52 @@ class ScooterRepositoryTest {
         }
 
     @Test
-    fun `assert that getScooter fetches empty data from the remote source`() =
+    fun `assert that getScooter fetches empty data from the remote source and the local as well`() =
         mainCoroutineRule.runBlockingTest {
             `when`(remoteDataSource.getScooters()).thenReturn(
                 Result.Success(emptyList())
+            )
+            `when`(localDataSource.getScooters()).thenReturn(
+                emptyList()
             )
 
             val response = systemUnderTest.getScooters()
 
             verify(remoteDataSource, times(1)).getScooters()
-            verifyNoInteractions(localDataSource)
+            verify(localDataSource, times(1)).getScooters()
 
             when (response) {
                 is Result.Error -> {
                     val result = response.exception
                     assertThat(result, notNullValue())
+                    assertThat(result, `is`(instanceOf(EmptyDataException::class.java)))
+                }
+            }
+        }
+
+    @Test
+    fun `assert that getScooter fetches empty data from the remote source`() =
+        mainCoroutineRule.runBlockingTest {
+            `when`(remoteDataSource.getScooters()).thenReturn(
+                Result.Success(emptyList())
+            )
+            `when`(localDataSource.getScooters()).thenReturn(
+                listOf(fakeEntity)
+            )
+
+            val response = systemUnderTest.getScooters()
+
+            verify(remoteDataSource, times(1)).getScooters()
+            verify(localDataSource, times(1)).getScooters()
+
+            when (response) {
+                is Result.Success -> {
+                    val result = response.data
                     assertThat(result, notNullValue())
+                    assertThat(result?.size, notNullValue())
+                    val scooter = result?.first()
+                    assertThat<ScooterEntity>(scooter, notNullValue())
+                    assertThat(scooter, `is`(equalTo(fakeEntity)))
                 }
             }
         }
