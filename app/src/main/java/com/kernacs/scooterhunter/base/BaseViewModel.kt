@@ -1,37 +1,44 @@
 package com.kernacs.scooterhunter.base
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.kernacs.scooterhunter.util.EmptyDataException
 import com.kernacs.scooterhunter.util.Result
 
 abstract class BaseViewModel<T> : ViewModel() {
-    val isLoading = MutableLiveData<Boolean>()
-    var error = MutableLiveData<Throwable?>()
-    val data = MutableLiveData<T>()
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean>
+        get() = _isLoading
+    private val _error = MutableLiveData<Throwable?>()
+    val error: LiveData<Throwable?>
+        get() = _error
+    private val _data = MutableLiveData<T>()
+    val data: LiveData<T>
+        get() = _data
 
     suspend fun loadData(getData: suspend () -> Result<T>) {
         Log.d(TAG, "Attempt to load data")
-        isLoading.value = true
+        _isLoading.value = true
         when (val result = getData()) {
             is Result.Success -> {
-                isLoading.value = false
+                _isLoading.value = false
                 result.data?.let {
-                    data.value = it
+                    _data.value = it
                     Log.d(TAG, "Loading of the data is successful")
-                    error.value = null
+                    _error.value = null
                 } ?: run {
                     Log.d(TAG, "Loaded data is null!")
-                    error.value = EmptyDataException()
+                    _error.value = EmptyDataException()
                 }
             }
             is Result.Error -> {
                 Log.d(TAG, "Error during data refresh: ${result.exception}")
-                isLoading.value = false
-                error.value = result.exception
+                _isLoading.value = false
+                _error.value = result.exception
             }
-            is Result.Loading -> isLoading.postValue(true)
+            is Result.Loading -> _isLoading.postValue(true)
         }
     }
 
