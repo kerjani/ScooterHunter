@@ -18,7 +18,7 @@ abstract class BindingsModule {
 
     @Binds
     abstract fun providesRemoteDataSource(
-        weatherRemoteDataSourceImpl: ScootersRemoteDataSource
+        remoteDataSourceImpl: ScootersRemoteDataSource
     ): RemoteDataSource
 
     @Binds

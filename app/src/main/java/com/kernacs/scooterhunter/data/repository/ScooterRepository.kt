@@ -18,6 +18,7 @@ class ScooterRepository @Inject constructor(
             is Result.Success -> {
                 if (response.data.isNullOrEmpty()) {
                     Result.Error(EmptyDataException())
+                    // TODO try to load data from local source before returning with error
                 } else {
                     response.data.map { it.toEntity() }.let {
                         localDataSource.saveScooters(it)

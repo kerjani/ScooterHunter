@@ -1,0 +1,59 @@
+name: verify PR and main
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: set up Java 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: API keys to local.properties
+        env:
+          MAPS_API_KEY: ${{secrets.MAPS_API_KEY}}
+          SECRET_KEY: ${{secrets.SECRET_KEY}}
+        run: |
+          echo '' >> ./local.properties
+          echo MAPS_API_KEY="$MAPS_API_KEY" >> ./local.properties
+          echo SECRET_KEY="$SECRET_KEY" >> ./local.properties
+      - name: build debug
+        run: ./gradlew assembleDebug --stacktrace
+
+  test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: set up Java 11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+    - name: API keys to local.properties
+      env:
+        MAPS_API_KEY: ${{secrets.MAPS_API_KEY}}
+        SECRET_KEY: ${{secrets.SECRET_KEY}}
+      run: |
+        echo '' >> ./local.properties
+        echo MAPS_API_KEY="$MAPS_API_KEY" >> ./local.properties
+        echo SECRET_KEY="$SECRET_KEY" >> ./local.properties
+    - name: Run Unit Tests
+      run: ./gradlew test
+    - name: run tests
+      uses: reactivecircus/android-emulator-runner@v2
+      with:
+        api-level: 26
+        target: default
+        arch: x86
+        profile: Nexus 6
+        script: ./gradlew connectedCheck --stacktrace
