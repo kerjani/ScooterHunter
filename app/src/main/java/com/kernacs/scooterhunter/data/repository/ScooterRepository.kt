@@ -17,8 +17,12 @@ class ScooterRepository @Inject constructor(
         when (val response = remoteDataSource.getScooters()) {
             is Result.Success -> {
                 if (response.data.isNullOrEmpty()) {
-                    Result.Error(EmptyDataException())
-                    // TODO try to load data from local source before returning with error
+                    val localData = localDataSource.getScooters()
+                    if (localData.isNullOrEmpty()) {
+                        Result.Error(EmptyDataException())
+                    } else {
+                        Result.Success(localData)
+                    }
                 } else {
                     response.data.map { it.toEntity() }.let {
                         localDataSource.saveScooters(it)

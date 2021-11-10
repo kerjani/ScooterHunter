@@ -25,7 +25,6 @@ import com.kernacs.scooterhunter.base.BaseFragment
 import com.kernacs.scooterhunter.data.entity.ScooterEntity
 import com.kernacs.scooterhunter.databinding.FragmentScootersMapBinding
 import com.kernacs.scooterhunter.ui.details.ScooterDetailsFragment
-import com.kernacs.scooterhunter.util.EmptyDataException
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -88,12 +87,8 @@ class ScootersMapFragment : BaseFragment(), OnMapReadyCallback {
     private fun registerObservers() {
 
         viewModel.data.observe(this as LifecycleOwner, { data ->
-            if (data.isEmpty())
-                viewModel.error.value = EmptyDataException()
-            else {
-                if (isMapReady) {
-                    loadMarkers(data)
-                }
+            if (isMapReady) {
+                loadMarkers(data)
             }
         })
         viewModel.isLoading.observe(this as LifecycleOwner, {
